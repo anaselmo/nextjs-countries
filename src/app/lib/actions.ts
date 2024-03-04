@@ -1,4 +1,6 @@
+"use server";
 import { signIn } from '@/auth';
+import { AuthError } from 'next-auth';
 
 export async function authenticate(
   prevState: string | undefined,
@@ -12,6 +14,7 @@ export async function authenticate(
         case 'CredentialsSignin':
           return 'Invalid credentials.';
         default:
+          console.log(`Error of type '${error.type}'`)
           return 'Something went wrong.';
       }
     }
