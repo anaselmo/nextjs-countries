@@ -10,7 +10,7 @@ export default function LoginPage() {
             <Logo />
           </div>
         </div>
-        {/* <LoginForm /> */}
+        <LoginForm />
       </div>
     </main>
   );
