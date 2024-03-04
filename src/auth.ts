@@ -2,17 +2,25 @@ import NextAuth from 'next-auth';
 import Credentials from 'next-auth/providers/credentials';
 import { authConfig } from './auth.config';
 import { z } from 'zod';
-import { sql } from '@vercel/postgres';
 import type { User } from '@/app/lib/definitions';
-import bcrypt from 'bcrypt';
- 
-async function getUser(email: string): Promise<User | undefined> {
+
+async function loginUser({ email, password }: { email: string, password: string }) {
   try {
-    const user = await sql<User>`SELECT * FROM users WHERE email=${email}`;
-    return user.rows[0];
-  } catch (error) {
-    console.error('Failed to fetch user:', error);
-    throw new Error('Failed to fetch user.');
+    const response = await fetch('http://localhost:3001/api/tourists/auth/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, password }),
+    });
+
+    if (response.ok) {
+      console.log(`user: ${JSON.stringify({ email, password })}`)
+      console.log(`token: ${await response.json()}`)
+      return await response.json();
+    }
+      const error = new Error(response.statusText);
+      throw error;
+  } catch (err) {
+    console.error('Failed to login user:', err);
   }
 }
  
@@ -26,12 +34,11 @@ export const { auth, signIn, signOut } = NextAuth({
           .safeParse(credentials);
 
         if (parsedCredentials.success) {
-          const { email, password } = parsedCredentials.data;
-          const user = await getUser(email);
-          if (!user) return null;
-          const passwordsMatch = await bcrypt.compare(password, user.password);
-
-          if (passwordsMatch) return user;
+          console.log({userData: parsedCredentials})
+          const logged = await loginUser(parsedCredentials.data);
+          if (!logged) return null;
+          
+          return logged;
         }
 
         console.log('Invalid credentials');
