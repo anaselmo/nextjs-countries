@@ -51,11 +51,25 @@ const countries = [
   { id: 50, name: 'Comoros', abbreviation: 'KM', capital: 'Moroni' },
 ];
 
+let visits: {
+  id: number,
+  countryId: number,
+  touristId: number,
+  date: string
+}[] = [
+  { id: 1, countryId: 1, touristId: 1, date: "2024-03-04T11:44:24.069Z" },
+  { id: 2, countryId: 2, touristId: 1, date: "2024-02-20T19:44:24.069Z" },
+  { id: 3, countryId: 3, touristId: 1, date: "2020-03-29T17:44:24.069Z" },
+  { id: 4, countryId: 4, touristId: 1, date: "2019-11-06T09:41:00.069Z" },
+  { id: 5, countryId: 5, touristId: 1, date: "2017-10-04T21:44:24.069Z" },
+]
+
+const ITEMS_PER_PAGE = 6;
+
 export const fetchCountries = async () => {
   return countries
 }
 
-const ITEMS_PER_PAGE = 6;
 export const fetchFilteredCountries = async (
   query: string,
   currentPage: number,
@@ -72,4 +86,20 @@ export const fetchCountryPages = async (query: string) => {
     country.name.toLowerCase().includes(query.toLowerCase()),
   );
   return Math.ceil(length / ITEMS_PER_PAGE)
+}
+
+export const fetchVisitPages = async (query: string) => {
+  // TODO: Filtering
+  const { length } = visits.filter((visit) => visit);
+  return Math.ceil(length / ITEMS_PER_PAGE)
+}
+
+export const fetchFilteredVisits = async (
+  query: string,
+  currentPage: number,
+) => {
+  // TODO: Filtering
+  const offset = (currentPage - 1) * ITEMS_PER_PAGE;
+  const filteredVisits = visits.filter((visit) => visit);
+  return filteredVisits.slice(offset, offset + ITEMS_PER_PAGE);
 }

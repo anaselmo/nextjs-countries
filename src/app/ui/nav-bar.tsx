@@ -3,11 +3,14 @@ import Logo from "@ui/logo";
 
 export default function NavBar () {
   return (
-    <header className="flex h-100 justify-between text-white bg-gray-900 px-10">
+    <header className="flex h-100 justify-between text-white px-10">
       <div className="flex items-center">
         <Logo/>
         <Link href="/" className='px-5'>
           Countries
+        </Link>
+        <Link href="/visits" className='px-5'>
+          Visits
         </Link>
       </div>
       <div className="flex items-center">
