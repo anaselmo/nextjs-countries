@@ -9,13 +9,17 @@ import {
 import { ArrowRightIcon } from '@heroicons/react/20/solid';
 import { Button } from '@ui/button';
 import { useFormState, useFormStatus } from 'react-dom';
-import { authenticate } from '@/app/lib/actions';
+import { useAuthStore } from '@/app/lib/store';
+import { useForm, SubmitHandler } from "react-hook-form"
+import { ILoginFormInput } from "@/app/lib/store";
 
 export default function LoginForm() {
-  const [errorMessage, dispatch] = useFormState(authenticate, undefined);
+  const { error, loading, signIn } = useAuthStore()
+  const { register, handleSubmit } = useForm<ILoginFormInput>()
+  const onSubmit: SubmitHandler<ILoginFormInput> = async (data) => await signIn(data)
 
   return (
-    <form action={dispatch} className="space-y-3">
+    <form onSubmit={handleSubmit(onSubmit)} className="space-y-3">
       <div className="flex-1 rounded-lg bg-gray-50 px-6 pb-4 pt-8">
         <h1 className={`${inter.className} mb-3 text-2xl`}>
           Please log in to continue.
@@ -33,9 +37,9 @@ export default function LoginForm() {
                 className="peer block w-full rounded-md border border-gray-200 py-[9px] pl-10 text-sm outline-2 placeholder:text-gray-500"
                 id="email"
                 type="email"
-                name="email"
                 placeholder="Enter your email address"
                 required
+                {...register("email")}
               />
               <AtSymbolIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-600" />
             </div>
@@ -52,16 +56,16 @@ export default function LoginForm() {
                 className="peer block w-full rounded-md border border-gray-200 py-[9px] pl-10 text-sm outline-2 placeholder:text-gray-500"
                 id="password"
                 type="password"
-                name="password"
                 placeholder="Enter password"
                 required
                 minLength={6}
+                {...register("password")}
               />
               <KeyIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-600" />
             </div>
           </div>
         </div>
-        <LoginButton />
+        <LoginButton pending={loading} />
         <div className="flex h-8 items-end space-x-1">
           {/* Add form errors here */}
           <div
@@ -69,10 +73,10 @@ export default function LoginForm() {
             aria-live="polite"
             aria-atomic="true"
           >
-            {errorMessage && (
+            {error && (
               <>
                 <ExclamationCircleIcon className="h-5 w-5 text-red-500" />
-                <p className="text-sm text-red-500">{errorMessage}</p>
+                <p className="text-sm text-red-500">{error}</p>
               </>
             )}
           </div>
@@ -82,9 +86,11 @@ export default function LoginForm() {
   );
 }
 
-function LoginButton() {
-  const { pending } = useFormStatus();
+interface LoginButtonProps {
+  pending: boolean;
+}
 
+function LoginButton({pending}: LoginButtonProps) {
   return (
     <Button className="mt-4 w-full" aria-disabled={pending}>
       Log in <ArrowRightIcon className="ml-auto h-5 w-5 text-gray-50" />

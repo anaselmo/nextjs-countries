@@ -1,7 +1,16 @@
+"use client";
+
 import Logo from '@ui/logo';
 import LoginForm from '@/app/ui/login-form';
+import { useAuthStore } from '../lib/store';
+import { redirect } from 'next/navigation';
  
 export default function LoginPage() {
+  const { token } = useAuthStore();
+  if (token !== null) {
+    console.log(`token from LoginPage: ${token}`)
+    return redirect("/")
+  }
   return (
     <main className="flex items-center justify-center md:h-screen">
       <div className="relative mx-auto flex w-full max-w-[400px] flex-col space-y-2.5 p-4 md:-mt-32">

@@ -1,13 +1,17 @@
+/* eslint-disable @next/next/no-async-client-component */
+"use client";
 import React from 'react';
 import Table from '@/app/ui/visits/table-visits';
 import { Metadata } from 'next';
 import Search from '@/app/ui/search';
 import Pagination from '@/app/ui/pagination';
 import { fetchVisitPages } from '@/app/lib/data';
+import { useAuthStore } from '@/app/lib/store';
+import { redirect } from 'next/navigation';
 
-export const metadata: Metadata = {
-  title: "Visits"
-};
+// export const metadata: Metadata = {
+//   title: "Visits"
+// };
 
 export default async function Page ({
   searchParams,
@@ -17,6 +21,12 @@ export default async function Page ({
     page?: string;
   };
 }) {
+  const { token } = useAuthStore();
+  if (token !== null) {
+    console.log(`token from visitPage: ${token}`)
+    return await redirect("/")
+  }
+  
   const query = searchParams?.query ?? '';
   const currentPage = Number(searchParams?.page) || 1;
   const totalPages = await fetchVisitPages(query);
