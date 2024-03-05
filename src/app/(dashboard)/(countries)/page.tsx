@@ -2,7 +2,7 @@ import React from 'react';
 import Table from '@ui/countries/table-countries';
 import { Metadata } from 'next';
 import Search from '@/app/ui/search';
-import Pagination from '@ui/countries/pagination-countries';
+import Pagination from '@/app/ui/pagination';
 import { fetchCountryPages } from '@/app/lib/data';
 
 export const metadata: Metadata = {

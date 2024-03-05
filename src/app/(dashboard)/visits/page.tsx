@@ -1,8 +1,8 @@
 import React from 'react';
-import Table from '@ui/countries/table-visits';
+import Table from '@/app/ui/visits/table-visits';
 import { Metadata } from 'next';
 import Search from '@/app/ui/search';
-import Pagination from '@ui/countries/pagination-countries';
+import Pagination from '@/app/ui/pagination';
 import { fetchVisitPages } from '@/app/lib/data';
 
 export const metadata: Metadata = {
@@ -25,6 +25,9 @@ export default async function Page ({
     <main className="flex flex-1 flex-col ">
       <div className="flex py-5 w-1/2 self-center justify-center items-center">
         <Search placeholder="Search visits..."/>
+        {/* <div className="bg-white">
+          +
+        </div> */}
       </div>
       <div className="flex flex-1 justify-center items-center">
         <Table query={query} currentPage={currentPage}/>

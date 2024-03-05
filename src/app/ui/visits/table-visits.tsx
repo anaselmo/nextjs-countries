@@ -23,7 +23,7 @@ export default async function InvoicesTable({
                 <div className="flex items-center justify-between border-b pb-4">
                   <div>
                     <div className="mb-2 flex items-center">
-                      <p className="text-sm text-gray-500">{visit.countryId}</p>
+                      <p className="text-sm text-gray-500">{countries.find(country => country.id === visit.countryId)?.name}</p>
                     </div>
                   </div>
                   <p className="text-sm text-gray-500">{formatDate(visit.date)}</p>
